@@ -1443,6 +1443,7 @@
 
       if (bgMusic) {
         bgMusic.volume = 0.75;
+        try { bgMusic.load(); } catch(e) {}
       }
 
       function syncMusicUI() {
@@ -1453,15 +1454,14 @@
         if (musicLabel) musicLabel.textContent = playing ? 'Music On' : 'Music';
       }
 
-      function tryAutoPlayMusic() {
-        if (!bgMusic || userManuallyPaused || !bgMusic.paused) return;
-        bgMusic.volume = 0.75;
+      function playMusicDirectly() {
+        if (!bgMusic || userManuallyPaused) return;
         bgMusic.muted = false;
-        var playPromise = bgMusic.play();
-        if (playPromise && typeof playPromise.then === 'function') {
-          playPromise.then(function () {
-            syncMusicUI();
-          }).catch(function () {
+        bgMusic.volume = 0.75;
+        var p = bgMusic.play();
+        if (p && typeof p.then === 'function') {
+          p.then(syncMusicUI).catch(function(err) {
+            console.log('Audio play error:', err);
             syncMusicUI();
           });
         }
@@ -1470,26 +1470,15 @@
       // 0a. Landing cover screen: tap to open the invitation, start music, and reveal
       var coverScreen = document.getElementById('inviteCoverScreen');
       if (coverScreen) {
-        function openInvite() {
+        function openInvite(e) {
           triggerInviteOpening();
-          tryAutoPlayMusic();
+          playMusicDirectly();
         }
         coverScreen.addEventListener('click', openInvite);
-        coverScreen.addEventListener('touchstart', function(e) {
-          openInvite();
-        }, { passive: true });
+        coverScreen.addEventListener('touchend', openInvite, { passive: true });
       }
 
-      // Music starts ONLY when the cover screen is tapped — no other auto-start triggers
-      ['click', 'touchstart', 'pointerdown', 'keydown', 'scroll'].forEach(function (evtName) {
-        window.addEventListener(evtName, function onFirstGesture(e) {
-          if (e && e.target && musicToggleBtn && musicToggleBtn.contains(e.target)) return;
-          // Only start music after the cover screen has been dismissed
-          if (document.body.classList.contains('invite-opened')) {
-            tryAutoPlayMusic();
-          }
-        }, { once: true, passive: true });
-      });
+      // Music starts ONLY when the cover screen is tapped
 
       if (musicToggleBtn && bgMusic) {
         musicToggleBtn.addEventListener('click', function () {
