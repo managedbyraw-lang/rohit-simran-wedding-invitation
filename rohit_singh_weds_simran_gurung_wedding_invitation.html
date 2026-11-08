@@ -1437,14 +1437,19 @@
       // 0a. Landing cover screen: tap to open the invitation, start music, and reveal
       var coverScreen = document.getElementById('inviteCoverScreen');
       if (coverScreen) {
-        coverScreen.addEventListener('click', function () {
+        function openInvite() {
           triggerInviteOpening();
           if (bgMusic) {
             bgMusic.muted = false;
             bgMusic.volume = 0.75;
             bgMusic.play().then(syncMusicUI).catch(syncMusicUI);
           }
-        });
+        }
+        coverScreen.addEventListener('click', openInvite);
+        coverScreen.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          openInvite();
+        }, { passive: false });
       }
 
       // 0b. Attached Wedding Music playback & toggle button
