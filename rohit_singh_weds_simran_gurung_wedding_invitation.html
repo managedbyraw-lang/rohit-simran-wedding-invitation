@@ -1353,8 +1353,8 @@
 
       // 0b. Attached Wedding Music playback & toggle button
       var bgMusic = document.getElementById('bgWeddingMusic');
-    bgMusic.volume = 0.75;
-    bgMusic.play().catch(() => {});  // Auto-play on load
+      bgMusic.volume = 0.75;
+      bgMusic.play().then(syncMusicUI).catch(syncMusicUI);  // Auto-play on load
       var musicToggleBtn = document.getElementById('musicToggleBtn');
       var musicIcon = document.getElementById('musicIcon');
       var musicLabel = document.getElementById('musicLabel');
