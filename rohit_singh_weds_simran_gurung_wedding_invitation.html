@@ -101,6 +101,87 @@
       transform: scale(1);
     }
 
+    /* ==========================================================================
+       LANDING COVER SCREEN: "You are Invited" + "Tap to open the invite"
+       ========================================================================== */
+    .invite-cover-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 250;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.2rem;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.18) 0%, transparent 55%),
+        radial-gradient(circle at 50% 100%, #2a3e3b 0%, #141f1e 100%);
+      transition: opacity 0.9s ease, visibility 0.9s ease;
+      will-change: opacity;
+    }
+    body.invite-opened .invite-cover-screen {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .cover-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.2rem;
+    }
+    .cover-title {
+      font-family: 'Alex Brush', cursive;
+      font-weight: 400;
+      font-size: clamp(2.6rem, 13vw, 4.6rem);
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      color: transparent;
+      background-image: linear-gradient(135deg, #FFD700 0%, #D4AF37 45%, #FFFDF2 55%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.35);
+      filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.5));
+      animation: coverTitlePulse 4.2s ease-in-out infinite;
+    }
+    @keyframes coverTitlePulse {
+      0%, 100% { filter: drop-shadow(0 0 24px rgba(212, 175, 55, 0.25)); }
+      50%      { filter: drop-shadow(0 0 46px rgba(255, 215, 0, 0.5)); }
+    }
+    .cover-subtitle {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--gold-rich);
+      opacity: 0.92;
+      animation: coverSubPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes coverSubPulse {
+      0%, 100% { opacity: 0.6; }
+      50%      { opacity: 1; }
+    }
+    .cover-hint {
+      position: absolute;
+      bottom: 8%;
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: clamp(0.7rem, 1.9vw, 0.85rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(212, 175, 55, 0.7);
+      animation: coverArrowBounce 1.6s ease-in-out infinite;
+    }
+    @keyframes coverArrowBounce {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(8px); }
+    }
+
     /* Floating top quick-navigation, music toggle & flip toggle bar */
     .floating-nav {
       position: fixed;
@@ -985,6 +1066,15 @@
     <div class="veil-glow"></div>
   </div>
 
+  <!-- Landing Cover Screen: "You are Invited" + "Tap to open the invite" -->
+  <div id="inviteCoverScreen" class="invite-cover-screen" aria-label="Open the invitation">
+    <div class="cover-content">
+      <h1 class="cover-title">You are Invited</h1>
+      <p class="cover-subtitle">Tap to open the invite</p>
+    </div>
+    <span class="cover-hint">Tap to open</span>
+  </div>
+
     <main class="invitation-wrapper">
 
     <!-- ======================================================================
@@ -1346,16 +1436,21 @@
         });
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', triggerInviteOpening);
-      } else {
-        triggerInviteOpening();
+      // 0a. Landing cover screen: tap to open the invitation, start music, and reveal
+      var coverScreen = document.getElementById('inviteCoverScreen');
+      if (coverScreen) {
+        coverScreen.addEventListener('click', function () {
+          triggerInviteOpening();
+          if (bgMusic) {
+            bgMusic.volume = 0.75;
+            bgMusic.play().then(syncMusicUI).catch(syncMusicUI);
+          }
+        });
       }
 
       // 0b. Attached Wedding Music playback & toggle button
       var bgMusic = document.getElementById('bgWeddingMusic');
       bgMusic.volume = 0.75;
-      bgMusic.play().then(syncMusicUI).catch(syncMusicUI);  // Auto-play on load
       var musicToggleBtn = document.getElementById('musicToggleBtn');
       var musicIcon = document.getElementById('musicIcon');
       var musicLabel = document.getElementById('musicLabel');
@@ -1382,8 +1477,8 @@
         }
       }
 
-      // Attempt autoplay immediately on load and on first user interaction (click, touch, scroll, keydown)
-      tryAutoPlayMusic();
+      // Attempt autoplay on first user interaction (click, touch, scroll, keydown)
+      // Music now starts when the cover screen is tapped instead of on page load
       ['click', 'touchstart', 'pointerdown', 'keydown', 'scroll'].forEach(function (evtName) {
         window.addEventListener(evtName, function onFirstGesture(e) {
           if (e && e.target && musicToggleBtn && musicToggleBtn.contains(e.target)) return;
