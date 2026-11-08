@@ -1477,12 +1477,14 @@
         }
       }
 
-      // Attempt autoplay on first user interaction (click, touch, scroll, keydown)
-      // Music now starts when the cover screen is tapped instead of on page load
+      // Music starts ONLY when the cover screen is tapped — no other auto-start triggers
       ['click', 'touchstart', 'pointerdown', 'keydown', 'scroll'].forEach(function (evtName) {
         window.addEventListener(evtName, function onFirstGesture(e) {
           if (e && e.target && musicToggleBtn && musicToggleBtn.contains(e.target)) return;
-          tryAutoPlayMusic();
+          // Only start music after the cover screen has been dismissed
+          if (document.body.classList.contains('invite-opened')) {
+            tryAutoPlayMusic();
+          }
         }, { once: true, passive: true });
       });
 
