@@ -1161,7 +1161,7 @@
       <!-- Surprise Prompt (fades in on scroll) -->
       <div class="slide2-surprise-box">
         <h3 class="surprise-title anim-fade-text" style="--delay: 1450ms;">A little surprise, just for you</h3>
-        <p class="surprise-sub anim-fade-text" style="--delay: 1780ms;">Scratch the golden card to reveal the day.</p>
+        <p class="surprise-sub anim-fade-text" style="--delay: 1780ms;">Tap the golden card to reveal the day.</p>
       </div>
 
       <!-- Tap to Reveal Golden Flip Card (fades in AFTER all text appears, at 2250ms) -->
@@ -1442,6 +1442,7 @@
         coverScreen.addEventListener('click', function () {
           triggerInviteOpening();
           if (bgMusic) {
+            bgMusic.muted = false;
             bgMusic.volume = 0.75;
             bgMusic.play().then(syncMusicUI).catch(syncMusicUI);
           }

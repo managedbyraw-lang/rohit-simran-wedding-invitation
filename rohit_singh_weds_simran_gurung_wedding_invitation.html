@@ -1442,6 +1442,7 @@
         coverScreen.addEventListener('click', function () {
           triggerInviteOpening();
           if (bgMusic) {
+            bgMusic.muted = false;
             bgMusic.volume = 0.75;
             bgMusic.play().then(syncMusicUI).catch(syncMusicUI);
           }
