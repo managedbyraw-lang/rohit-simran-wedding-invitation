@@ -35,8 +35,7 @@
       font-family: 'EB Garamond', Georgia, serif;
       color: var(--forest);
       overflow-x: hidden;
-      scroll-behavior: auto;
-      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
     }
 
     /* ==========================================================================
@@ -49,7 +48,6 @@
       pointer-events: none;
       display: flex;
       overflow: hidden;
-      will-change: transform, opacity;
     }
 
     .veil-panel {
@@ -57,8 +55,8 @@
       height: 100%;
       background: radial-gradient(circle at 50% 45%, #2f4f4b 0%, #162422 100%);
       border-color: rgba(212, 175, 55, 0.55);
-      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.6s ease;
-      will-change: transform, opacity;
+      transition: transform 2.0s cubic-bezier(0.4, 0, 0.2, 1), opacity 2.0s ease;
+      will-change: transform;
       position: relative;
     }
     .veil-left {
@@ -75,7 +73,7 @@
       inset: 0;
       background: radial-gradient(circle at 50% 40%, rgba(255, 215, 0, 0.38) 0%, rgba(212, 175, 55, 0.1) 45%, transparent 75%);
       opacity: 1;
-      transition: opacity 0.6s ease;
+      transition: opacity 2.0s ease;
       will-change: opacity;
     }
 
@@ -91,11 +89,11 @@
       opacity: 0;
     }
 
-    /* Optimized initial zoom-out settle on Slide 1 artwork when invite opens */
+    /* Slower initial zoom-out settle on Slide 1 artwork when invite opens */
     .hero-bg-layer,
     .hero-overlay-layer {
       transform: scale(1.06);
-      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: transform 2.0s cubic-bezier(0.34, 1.35, 0.64, 1);
       will-change: transform;
     }
     body.invite-opened .hero-bg-layer,
@@ -123,9 +121,8 @@
       background:
         radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.18) 0%, transparent 55%),
         radial-gradient(circle at 50% 100%, #2a3e3b 0%, #141f1e 100%);
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-      will-change: opacity, transform;
-      transform: translateZ(0);
+      transition: opacity 0.9s ease, visibility 0.9s ease;
+      will-change: opacity;
     }
     body.invite-opened .invite-cover-screen {
       opacity: 0;
@@ -151,9 +148,7 @@
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 30px rgba(212, 175, 55, 0.35);
       filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.5));
-      animation: coverTitlePulse 3s ease-in-out infinite;
-      will-change: filter;
-      transform: translateZ(0);
+      animation: coverTitlePulse 4.2s ease-in-out infinite;
     }
     @keyframes coverTitlePulse {
       0%, 100% { filter: drop-shadow(0 0 24px rgba(212, 175, 55, 0.25)); }
@@ -166,9 +161,7 @@
       text-transform: uppercase;
       color: var(--gold-rich);
       opacity: 0.92;
-      animation: coverSubPulse 1.2s ease-in-out infinite;
-      will-change: opacity;
-      transform: translateZ(0);
+      animation: coverSubPulse 1.8s ease-in-out infinite;
     }
     @keyframes coverSubPulse {
       0%, 100% { opacity: 0.6; }
@@ -182,13 +175,11 @@
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: rgba(212, 175, 55, 0.7);
-      animation: coverArrowBounce 1.2s ease-in-out infinite;
-      will-change: transform;
-      transform: translateZ(0);
+      animation: coverArrowBounce 1.6s ease-in-out infinite;
     }
     @keyframes coverArrowBounce {
-      0%, 100% { transform: translateZ(0) translateY(0); }
-      50%      { transform: translateZ(0) translateY(8px); }
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(8px); }
     }
 
     /* Floating top quick-navigation, music toggle & flip toggle bar */
@@ -196,7 +187,7 @@
       position: fixed;
       top: 10px;
       left: 50%;
-      transform: translateX(-50%) translateZ(0);
+      transform: translateX(-50%);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -212,10 +203,7 @@
       overflow-x: auto;
       scrollbar-width: none;
       opacity: 0;
-      transition: opacity 0.4s ease 0.2s;
-      will-change: opacity;
-      transform: translateZ(0);
-      backface-visibility: hidden;
+      transition: opacity 1.2s ease 1.4s;
     }
     body.invite-opened .floating-nav {
       opacity: 1;
@@ -367,10 +355,9 @@
       opacity: 0;
       transform: translateY(18px) scale(0.95);
       transition:
-        opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      animation: goldenTextShimmer 3s linear infinite;
-      will-change: opacity, transform;
+        opacity 1.85s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.85s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: goldenTextShimmer 4.5s linear infinite;
     }
 
     @keyframes goldenTextShimmer {
@@ -380,13 +367,6 @@
       100% {
         background-position: 240% 50%;
       }
-    }
-
-    /* Optimize shimmer to 60fps by using GPU-accelerated properties */
-    .hero-name-text {
-      transform: translateZ(0);
-      backface-visibility: hidden;
-      perspective: 1000px;
     }
 
     body.invite-opened .hero-name-text.line-1 {
@@ -412,8 +392,7 @@
       pointer-events: none;
       z-index: 3;
       opacity: 0;
-      transition: opacity 0.6s ease 0.5s;
-      will-change: opacity;
+      transition: opacity 2.0s ease 1.5s;
     }
     body.invite-opened .sparkle-field {
       opacity: 1;
@@ -451,11 +430,6 @@
       }
     }
 
-    .gold-sparkle {
-      will-change: transform, opacity;
-      transform: translateZ(0);
-    }
-
     /* Layer 3: Foreground overlay image (image10) with transparent sky & opaque mountains */
     .hero-overlay-layer {
       z-index: 3;
@@ -467,7 +441,7 @@
       position: absolute;
       bottom: 3.4%;
       left: 50%;
-      transform: translateX(-50%) translateZ(0);
+      transform: translateX(-50%);
       z-index: 5;
       background: transparent;
       border: none;
@@ -480,16 +454,14 @@
       gap: 3px;
       cursor: pointer;
       opacity: 0;
-      transition: opacity 0.4s ease;
+      transition: opacity 1.2s ease;
       padding: 6px 14px;
       text-align: center;
-      will-change: opacity, transform;
-      transform: translateZ(0);
     }
 
     body.invite-opened .scroll-down-bottom-middle.is-visible {
       opacity: 1;
-      animation: scrollTextPulseSlow 1.5s infinite ease-in-out;
+      animation: scrollTextPulseSlow 2.6s infinite ease-in-out;
     }
 
     .scroll-down-label {
@@ -517,38 +489,37 @@
 
     @keyframes scrollTextPulseSlow {
       0%, 100% {
-        transform: translateX(-50%) translateZ(0) scale(0.97);
+        transform: translateX(-50%) scale(0.97);
         opacity: 0.78;
       }
       50% {
-        transform: translateX(-50%) translateZ(0) scale(1.06);
+        transform: translateX(-50%) scale(1.06);
         opacity: 1;
       }
     }
 
     @keyframes arrowPulseDownSlow {
       0%, 100% {
-        transform: translateY(-2px) translateZ(0);
+        transform: translateY(-2px);
       }
       50% {
-        transform: translateY(5px) translateZ(0);
+        transform: translateY(5px);
       }
     }
 
     /* ==========================================================================
-       OPTIMIZED 60FPS SCROLL ANIMATION UTILITIES
-       Optimized for 60fps: shorter durations, GPU-accelerated properties
+       SLOWER SCROLL ANIMATION UTILITIES (Fade-in texts & Slide-in cards)
+       Note: Texts inside cards are NOT given fade-on-scroll classes so they
+             stay crisp and immediate inside their cards.
        ========================================================================== */
     .anim-fade-text {
       opacity: 0;
       transform: translate3d(0, 20px, 0);
       transition:
-        opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity 1.45s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.45s cubic-bezier(0.22, 1, 0.36, 1);
       transition-delay: var(--delay, 0ms);
       will-change: opacity, transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
     }
 
     .in-view .anim-fade-text {
@@ -556,17 +527,15 @@
       transform: translate3d(0, 0, 0);
     }
 
-    /* Page 2 Golden Card: optimized for 60fps */
+    /* Page 2 Golden Card: fades in slowly AFTER all text on Page 2 appears */
     .anim-fade-card-delayed {
       opacity: 0;
       transform: translate3d(0, 18px, 0) scale(0.94);
       transition:
-        opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      transition-delay: var(--delay, 1200ms);
+        opacity 1.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.55s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--delay, 2250ms);
       will-change: opacity, transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
     }
 
     .in-view .anim-fade-card-delayed {
@@ -574,29 +543,25 @@
       transform: translate3d(0, 0, 0) scale(1);
     }
 
-    /* Page 3 & Page 4 Cards: slide in optimized for 60fps */
+    /* Page 3 & Page 4 Cards: slide in slowly from left or right */
     .anim-slide-left {
       opacity: 0;
       transform: translate3d(-115%, 0, 0);
       transition:
-        opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity 1.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.55s cubic-bezier(0.22, 1, 0.36, 1);
       transition-delay: var(--delay, 0ms);
       will-change: opacity, transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
     }
 
     .anim-slide-right {
       opacity: 0;
       transform: translate3d(115%, 0, 0);
       transition:
-        opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity 1.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.55s cubic-bezier(0.22, 1, 0.36, 1);
       transition-delay: var(--delay, 0ms);
       will-change: opacity, transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
     }
 
     .in-view .anim-slide-left,
@@ -713,7 +678,7 @@
     }
 
     /* ==========================================================================
-       OPTIMIZED 60FPS 3D FLIP CARD MECHANICS
+       SHARED 3D FLIP CARD MECHANICS (Slower, graceful 1.1s turn)
        ========================================================================== */
     .flip-card-inner {
       position: relative;
@@ -721,10 +686,7 @@
       height: 100%;
       transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d;
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
+      transition: transform 1.1s cubic-bezier(0.34, 1.35, 0.64, 1);
     }
 
     .flip-card-trigger.is-flipped .flip-card-inner {
@@ -1162,7 +1124,7 @@
     </section>
 
     <!-- ======================================================================
-         SLIDE 2: TWO ROOTS. TWO STORIES. & SAVE THE DATE FLIP CARD
+         SLIDE 2: TWO ROOTS, ONE BEAUTIFUL JOURNEY & SAVE THE DATE FLIP CARD
          - All texts outside the card fade in slowly and sequentially on scroll
          - "Tap to reveal" card fades in after all text appears
          ====================================================================== -->
@@ -1175,8 +1137,11 @@
 
       <!-- Story Text Box (each line fades in slowly on scroll) -->
       <div class="slide2-story-box">
-        <p class="kicker-crimson anim-fade-text" style="--delay: 150ms;">Two roots. Two stories.</p>
-        <h2 class="heading-forest anim-fade-text" style="--delay: 450ms;">Our forever begins here.</h2>
+        <p class="kicker-crimson anim-fade-text" style="--delay: 150ms;">TWO ROOTS. ONE BEAUTIFUL JOURNEY.</p>
+        <h2 class="heading-forest anim-fade-text" style="--delay: 450ms;">The mountains brought us home.</h2>
+        <p class="body-forest anim-fade-text" style="--delay: 780ms;">
+          Two roots, two stories, our forever begins here<br><br>From the misty tea gardens of Darjeeling to the quiet mountains of Kumaon, two stories began in different corners of the Himalayas, only to find each other in Delhi. What started as two separate journeys has grown into a shared dream. With the blessings of our families, we now bring together the colours of our traditions, the warmth of our homes and the love that binds us, as we begin a beautiful journey of our own.
+        </p>
       </div>
 
       <!-- Couple Hometowns (fades in on scroll) -->
